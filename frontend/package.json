@@ -1,0 +1,12 @@
+{
+  "name": "unnati-beauty-frontend",
+  "version": "1.0.0",
+  "scripts": {
+    "start": "live-server . --port=3000 --host=localhost",
+    "dev": "live-server . --port=3000"
+  },
+  "devDependencies": {
+    "live-server": "^1.2.2"
+  }
+}
+

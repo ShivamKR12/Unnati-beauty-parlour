@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Unnati Beauty Parlour | Premium Salon Services</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+</head>
+<body>
+  <!-- Navigation -->
+  <header>
+    <nav>
+      <a href="index.html" class="logo">Unnati Beauty <span style="color: var(--primary-pink);">Parlour</span></a>
+      <ul class="nav-links">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="services.html">Services</a></li>
+        <li><a href="products.html">Products</a></li>
+        <li><a href="book.html">Book Appointment</a></li>
+        <li><a href="#about">About</a></li>
+        <li><a href="#contact">Contact</a></li>
+        <li><a href="login.html" class="cta-btn" id="loginBtn">Login</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <!-- Hero Section -->
+  <section class="hero">
+    <h1>Discover Your Beauty</h1>
+    <p>Experience luxury salon services with our expert stylists. Transform your look with premium beauty treatments.</p>
+    <div>
+      <a href="services.html" class="cta-btn" style="margin-right: 1rem;">View Services</a>
+      <a href="book.html" class="cta-btn">Book Now</a>
+    </div>
+  </section>
+
+  <!-- Featured Services -->
+  <section class="section">
+    <h2>Featured Services</h2>
+    <div class="grid" id="featuredServices">
+      <!-- Dynamic content -->
+    </div>
+  </section>
+
+  <!-- Popular Products -->
+  <section class="section" style="background: var(--light-gray);">
+    <h2>Popular Products</h2>
+    <div class="grid" id="featuredProducts">
+      <!-- Dynamic content -->
+    </div>
+  </section>
+
+  <!-- Testimonials -->
+  <section class="section">
+    <h2>What Our Clients Say</h2>
+    <div class="grid" style="grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));">
+      <div class="card">
+        <p>"Amazing bridal makeup! The team made me feel like a princess on my wedding day."</p>
+        <div style="margin-top: 1.5rem; font-weight: 600;">- Priya S.</div>
+      </div>
+      <div class="card">
+        <p>"Best hair spa in town. My hair feels so soft and healthy now."</p>
+        <div style="margin-top: 1.5rem; font-weight: 600;">- Anjali K.</div>
+      </div>
+      <div class="card">
+        <p>"Love the nail art designs! Professional and hygienic."</p>
+        <div style="margin-top: 1.5rem; font-weight: 600;">- Riya M.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA Section -->
+  <section class="section" style="text-align: center; background: linear-gradient(135deg, var(--primary-pink), var(--gold)); color: white;">
+    <h2>Ready to Transform?</h2>
+    <p>Book your appointment today and experience luxury beauty services.</p>
+    <a href="book.html" class="cta-btn" style="background: white; color: var(--primary-pink); font-size: 1.2rem; padding: 1.2rem 3rem;">Book Appointment</a>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <div class="footer-content">
+      <div>
+        <h3>Unnati Beauty Parlour</h3>
+        <p>Your trusted partner for beauty and wellness.</p>
+      </div>
+      <div>
+        <h4>Services</h4>
+        <ul style="list-style: none;">
+          <li>Hair Styling</li>
+          <li>Bridal Makeup</li>
+          <li>Spa Treatments</li>
+        </ul>
+      </div>
+      <div>
+        <h4>Contact</h4>
+        <p>Phone: +91 98765 43210</p>
+        <p>Email: info@unnatibeauty.com</p>
+      </div>
+      <div>
+        <h4>Follow Us</h4>
+        <div class="social-links">
+          <a href="#"><i class="fab fa-instagram"></i></a>
+          <a href="#"><i class="fab fa-facebook"></i></a>
+          <a href="#"><i class="fab fa-whatsapp"></i></a>
+        </div>
+      </div>
+    </div>
+    <div style="border-top: 1px solid #444; padding-top: 1rem; margin-top: 2rem;">
+      <p>&copy; 2024 Unnati Beauty Parlour. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <script src="js/app.js"></script>
+  <script>
+    // Load featured on page load
+    window.addEventListener('load', () => {
+      loadFeatured();
+    });
+
+    async function loadFeatured() {
+      try {
+        const servicesRes = await fetch('http://localhost:5000/api/services');
+        const services = await servicesRes.json();
+        const productsRes = await fetch('http://localhost:5000/api/products');
+        const products = await productsRes.json();
+
+        // Top 3 services
+        services.slice(0,3).forEach(service => {
+          document.getElementById('featuredServices').innerHTML += `
+            <div class="service-card card">
+              <img src="${service.imageUrl}" alt="${service.name}">
+              <h3>${service.name}</h3>
+              <p>${service.description.substring(0,100)}...</p>
+              <div class="price">₹${service.price}</div>
+              <a href="services.html" class="btn">View Details</a>
+            </div>
+          `;
+        });
+
+        // Top 3 products
+        products.slice(0,3).forEach(product => {
+          document.getElementById('featuredProducts').innerHTML += `
+            <div class="product-card card">
+              <img src="${product.imageUrl}" alt="${product.name}">
+              <h3>${product.name}</h3>
+              <p>${product.description.substring(0,100)}...</p>
+              <div class="price">₹${product.price}</div>
+              <a href="products.html" class="btn">Shop Now</a>
+            </div>
+          `;
+        });
+      } catch (err) {
+        console.log('Backend not running yet, static fallback');
+        // Static fallback
+        document.getElementById('featuredServices').innerHTML = '<p style="grid-column: 1/-1; text-align: center;">Services load when backend running</p>';
+        document.getElementById('featuredProducts').innerHTML = '<p style="grid-column: 1/-1; text-align: center;">Products load when backend running</p>';
+      }
+    }
+  </script>
+</body>
+</html>
+

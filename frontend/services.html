@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Services - Unnati Beauty</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <header>
+    <nav>
+      <a href="index.html" class="logo">Unnati Beauty <span style="color: var(--primary-pink);">Parlour</span></a>
+      <ul class="nav-links">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="services.html">Services</a></li>
+        <li><a href="products.html">Products</a></li>
+        <li><a href="book.html">Book</a></li>
+        <li><a href="login.html" id="loginBtn" class="cta-btn">Login</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <section class="section">
+    <h2>Our Beauty Services</h2>
+    <div class="grid" id="servicesList">
+      <div class="card" style="grid-column: 1/-1;">
+        <p>Loading services...</p>
+      </div>
+    </div>
+  </section>
+
+  <script src="js/app.js"></script>
+  <script>
+    App.checkAuth();
+
+    async function loadServices() {
+      try {
+        const services = await App.getServices();
+        const container = document.getElementById('servicesList');
+        container.innerHTML = services.map(service => `
+          <div class="service-card card">
+            <img src="${service.imageUrl}" alt="${service.name}">
+            <h3>${service.name}</h3>
+            <p>${service.description}</p>
+            <div class="price">₹${service.price} <span style="font-size: 0.9rem; opacity: 0.8;">(${service.duration} mins)</span></div>
+            <button class="btn" onclick="bookService('${service._id}', '${service.name}')">Book Now</button>
+          </div>
+        `).join('');
+      } catch (err) {
+        document.getElementById('servicesList').innerHTML = `
+          <div class="card" style="grid-column: 1/-1; text-align: center;">
+            <p>Services load when backend is running. <br> Run: cd backend && npm run dev</p>
+          </div>
+        `;
+      }
+    }
+
+    function bookService(serviceId, name) {
+      if (!App.currentUser) {
+        alert('Please login first');
+        location.href = 'login.html';
+        return;
+      }
+      localStorage.setItem('bookingServiceId', serviceId);
+      localStorage.setItem('bookingServiceName', name);
+      location.href = 'book.html';
+    }
+
+    window.addEventListener('load', loadServices);
+  </script>
+</body>
+</html>
+
